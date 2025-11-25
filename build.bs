@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Exit immediately if a command exits with a non-zero status
+set -o errexit
+
+# 1. Install dependencies (Just in case Render misses the auto-build)
+pip install -r requirements.txt
+
+# 2. Start the Telegram Bot in the BACKGROUND
+# The '&' symbol is critical. It lets the script continue to the next line.
+python bot.py &
+
+# 3. Start the Payment Server in the FOREGROUND
+# We use gunicorn for a production-ready web server.
+# This keeps the container alive.
+gunicorn server:app
